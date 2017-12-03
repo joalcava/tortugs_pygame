@@ -32,7 +32,7 @@ class Menu:
         self.construir_opciones(opciones)
 
     def construir_opciones(self, opciones):
-        fuente = pygame.font.Font('fuentes/HKGrotesk-Bold.otf', 22)
+        fuente = pygame.font.Font('fuentes/hkgrotesk-bold.otf', 22)
         fuente.set_bold(True)
 
         y_pos = 205
