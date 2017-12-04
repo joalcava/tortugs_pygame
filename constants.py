@@ -11,7 +11,7 @@
  2017-2
 """
 
-# Dimensiones de pantalla
+# Dimensiones de _pantalla
 ANCHO_PANTALLA = 800
 ALTO_PANTALLA = 600
 

@@ -5,57 +5,44 @@ import platforms
 
 
 class Nivel:
-    """ This is a generic super-class used to define a level.
-        Create a child class for each level with level-specific
-        info. """
 
-    # Lists of sprites used in all levels. Add or remove
-    # lists as needed for your game. """
-    platform_list = None
-    enemy_list = None
-    enemy_list2 = None
-    object_list = None
-
-    # Background image
-    background = None
-
-    # How far this world has been scrolled left/right
-    world_shift = 0
-    level_limit = -1000
+    plataformas = None
+    enemigos_l1 = None
+    enemigos_l2 = None
+    objetos_l = None
+    fondo = None
+    sumatoria_de_cambio = 0
+    limite = -1000
 
     def __init__(self, player):
-        """ Constructor. Pass in a handle to player. Needed for when moving platforms
-            collide with the player. """
-        self.platform_list = pygame.sprite.Group()
-        self.enemy_list = pygame.sprite.Group()
-        self.enemy_list2 = pygame.sprite.Group()
-        self.object_list = pygame.sprite.Group()
+        self.plataformas = pygame.sprite.Group()
+        self.enemigos_l1 = pygame.sprite.Group()
+        self.enemigos_l2 = pygame.sprite.Group()
+        self.objetos_l = pygame.sprite.Group()
         self.lista_bala = pygame.sprite.Group()
         self.player = player
 
-    # Update everything on this level
     def update(self):
-        """ Update everything in this level."""
-        for enemy in self.enemy_list:
-            if enemy.rect.x < self.player.rect.x:
-                if enemy.ene == 0 or enemy.ene == 5:
-                    enemy.direccion = 1
+        for enemigo in self.enemigos_l1:
+            if enemigo.rect.x < self.player.rect.x:
+                if enemigo.ene == 0 or enemigo.ene == 5:
+                    enemigo.direccion = 1
             else:
-                if enemy.ene == 0 or enemy.ene == 5:
-                    enemy.direccion = 0
-            if enemy.disparar == 0 and (abs(enemy.rect.x - self.player.rect.x) < 250):
-                balae = platforms.Bala('imagen/balas.png')
-                if enemy.direccion == 1:
+                if enemigo.ene == 0 or enemigo.ene == 5:
+                    enemigo.direccion = 0
+            if enemigo.disparar == 0 and (abs(enemigo.rect.x - self.player.rect.x) < 250):
+                balae = platforms.Bala()
+                if enemigo.direccion == 1:
                     balae.direccion = "R"
                 else:
                     balae.direccion = "L"
-                balae.rect.x = enemy.rect.x - 5
-                balae.rect.y = enemy.rect.y + 20
+                balae.rect.x = enemigo.rect.x - 5
+                balae.rect.y = enemigo.rect.y + 20
                 self.lista_bala.add(balae)
 
-            if enemy.disparar == 0 and (abs(enemy.rect.x - self.player.rect.x) < 300) and enemy.ene == 5:
-                balae = platforms.Bala('imagen/poisonball.png')
-                if enemy.direccion == 1:
+            if enemigo.disparar == 0 and (abs(enemigo.rect.x - self.player.rect.x) < 300) and enemigo.ene == 5:
+                balae = platforms.Bala()
+                if enemigo.direccion == 1:
                     balae.direccion = "R"
                 else:
                     balae.direccion = "L"
@@ -63,54 +50,54 @@ class Nivel:
                 balae.rect.y = self.player.rect.y + 20
                 self.lista_bala.add(balae)
 
-            if enemy.ene == 1:
-                if enemy.atacar == 0 and (self.player.direccion != enemy.direction):
-                    enemy.atacar()
+            if enemigo.ene == 1:
+                if enemigo.atacar == 0 and (self.player.direccion != enemigo.direction):
+                    enemigo.atacar()
 
         ls2 = pygame.sprite.Group()
         ls2.add(self.player)
 
-        for enemy in self.enemy_list2:
-            if enemy.rect.x < self.player.rect.x:
-                if enemy.ene == 0:
-                    enemy.direccion = 1
+        for enemigo in self.enemigos_l2:
+            if enemigo.rect.x < self.player.rect.x:
+                if enemigo.ene == 0:
+                    enemigo.direccion = 1
             else:
-                if enemy.ene == 0:
-                    enemy.direccion = 0
-            if enemy.disparar == 0 and (abs(enemy.rect.x - self.player.rect.x) < 250):
-                balae = platforms.Bala('imagen/balas.png')
-                if enemy.direccion == 1:
+                if enemigo.ene == 0:
+                    enemigo.direccion = 0
+            if enemigo.disparar == 0 and (abs(enemigo.rect.x - self.player.rect.x) < 250):
+                balae = platforms.Bala()
+                if enemigo.direccion == 1:
                     balae.direccion = "R"
                 else:
                     balae.direccion = "L"
-                balae.rect.x = enemy.rect.x - 5
-                balae.rect.y = enemy.rect.y + 20
+                balae.rect.x = enemigo.rect.x - 5
+                balae.rect.y = enemigo.rect.y + 20
                 self.lista_bala.add(balae)
 
-            if enemy.ene == 1:
-                if enemy.atacar == 0 and (self.player.direccion != enemy.direction):
-                    enemy.atacar()
+            if enemigo.ene == 1:
+                if enemigo.atacar == 0 and (self.player.direccion != enemigo.direction):
+                    enemigo.atacar()
 
-            ls_choque2 = pygame.sprite.spritecollide(enemy, ls2, False)
+            ls_choque2 = pygame.sprite.spritecollide(enemigo, ls2, False)
             for elemento in ls_choque2:
-                if self.player.atacando and enemy.attack:
+                if self.player.atacando and enemigo.attack:
                     if self.player.direccion == "R":
                         self.player.rect.x -= 100
                     else:
                         self.player.rect.x += 100
 
-                if self.player.atacando is False and enemy.attack:
+                if self.player.atacando is False and enemigo.attack:
                     if self.player.direccion == "R":
                         self.player.rect.x -= 200
                     else:
                         self.player.rect.x += 200
                     self.player.vida -= 1
 
-                if self.player.atacando and enemy.attack is False:
-                    self.enemy_list2.remove(enemy)
+                if self.player.atacando and enemigo.attack is False:
+                    self.enemigos_l2.remove(enemigo)
                     self.player.puntos += 20
 
-                if self.player.atacando is False and enemy.attack is False:
+                if self.player.atacando is False and enemigo.attack is False:
                     if self.player.direccion == "R":
                         self.player.rect.x -= 200
                     else:
@@ -120,18 +107,18 @@ class Nivel:
         ls = pygame.sprite.Group()
         ls.add(self.player)
         for bala in self.lista_bala:
-            ls_impactos = pygame.sprite.spritecollide(bala, self.platform_list, False)
+            ls_impactos = pygame.sprite.spritecollide(bala, self.plataformas, False)
             for impacto in ls_impactos:
                 self.lista_bala.remove(bala)
 
             if bala.jugador == 1:
-                ls_impactos = pygame.sprite.spritecollide(bala, self.enemy_list, True)
+                ls_impactos = pygame.sprite.spritecollide(bala, self.enemigos_l1, True)
                 for impacto in ls_impactos:
                     self.lista_bala.remove(bala)
                     self.player.puntos += 5
 
             if bala.jugador == 1:
-                ls_impactos = pygame.sprite.spritecollide(bala, self.enemy_list2, False)
+                ls_impactos = pygame.sprite.spritecollide(bala, self.enemigos_l2, False)
                 for impacto in ls_impactos:
                     self.lista_bala.remove(bala)
 
@@ -144,7 +131,7 @@ class Nivel:
                     else:
                         self.player.puntos += 5
 
-        ls_choque = pygame.sprite.spritecollide(self.player, self.enemy_list, self.player.atacando)
+        ls_choque = pygame.sprite.spritecollide(self.player, self.enemigos_l1, self.player.atacando)
         for elemento in ls_choque:
             if self.player.atacando:
                 self.player.puntos += 10
@@ -161,61 +148,46 @@ class Nivel:
                     self.player.rect.x -= 7
 
         self.lista_bala.update()
-        self.platform_list.update()
-        self.enemy_list.update()
-        self.enemy_list2.update()
+        self.plataformas.update()
+        self.enemigos_l1.update()
+        self.enemigos_l2.update()
 
-    def draw(self, screen):
-        """ Draw everything on this level. """
+    def draw(self, pantalla):
+        pantalla.fill(constants.Color.AZUL)
+        pantalla.blit(self.fondo, (self.sumatoria_de_cambio // 3, 0))
+        self.objetos_l.draw(pantalla)
+        self.lista_bala.draw(pantalla)
+        self.plataformas.draw(pantalla)
+        self.enemigos_l1.draw(pantalla)
+        self.enemigos_l2.draw(pantalla)
 
-        # Draw the background
-        # We don't shift the background as much as the sprites are shifted
-        # to give a feeling of depth.
-        screen.fill(constants.Color.AZUL)
-        screen.blit(self.background, (self.world_shift // 3, 0))
+    def mover_mundo(self, dx):
+        self.sumatoria_de_cambio += dx
 
-        # Draw all the sprite lists that we have
-        self.object_list.draw(screen)
-        self.lista_bala.draw(screen)
-        self.platform_list.draw(screen)
-        self.enemy_list.draw(screen)
-        self.enemy_list2.draw(screen)
-
-    def shift_world(self, shift_x):
-        """ When the user moves left/right and we need to scroll everything: """
-
-        # Keep track of the shift amount
-        self.world_shift += shift_x
-
-        # Go through all the sprite lists and shift
         for bala in self.lista_bala:
-            bala.rect.x += shift_x
+            bala.rect.x += dx
 
-        for three in self.object_list:
-            three.rect.x += shift_x
+        for three in self.objetos_l:
+            three.rect.x += dx
 
-        for platform in self.platform_list:
-            platform.rect.x += shift_x
+        for platform in self.plataformas:
+            platform.rect.x += dx
 
-        for enemy in self.enemy_list:
-            enemy.rect.x += shift_x
+        for enemy in self.enemigos_l1:
+            enemy.rect.x += dx
 
-        for enemy in self.enemy_list2:
-            enemy.rect.x += shift_x
+        for enemy in self.enemigos_l2:
+            enemy.rect.x += dx
 
 
 class Nivel1(Nivel):
-    """ Definition for level 1. """
 
     def __init__(self, player):
-        """ Create level 1. """
-
-        # Call the parent constructor
         Nivel.__init__(self, player)
-        self.id = 1
-        self.background = pygame.image.load("imagen/clouds.jpg").convert_alpha()
-        self.background.set_colorkey(constants.Color.BLANCO)
-        self.level_limit = -3300
+        self.id = 0
+        self.fondo = pygame.image.load("imagen/nivel1.jpg").convert_alpha()
+        self.fondo.set_colorkey(constants.Color.BLANCO)
+        self.limite = -3300
 
         # Array with type of platform, and x, y location of the platform.
         level = [[platforms.GRASS2, 200, 536],
@@ -309,13 +281,13 @@ class Nivel1(Nivel):
             ene = platforms.Enemigo(enemigo[0], enemigo[1])
             ene.rect.x = enemigo[2]
             ene.rect.y = enemigo[3]
-            self.enemy_list.add(ene)
+            self.enemigos_l1.add(ene)
 
         for obj in objetos:
             three_ob = platforms.Objeto(obj[0], 1)
             three_ob.rect.x = obj[1]
             three_ob.rect.y = obj[2]
-            self.object_list.add(three_ob)
+            self.objetos_l.add(three_ob)
 
         # Go through the array above and add platforms
         for platform in level:
@@ -323,7 +295,7 @@ class Nivel1(Nivel):
             block.rect.x = platform[1]
             block.rect.y = platform[2]
             block.player = self.player
-            self.platform_list.add(block)
+            self.plataformas.add(block)
 
         # Add a custom moving platform
         block = platforms.MovingPlatform(platforms.GRASS1, 1)
@@ -334,7 +306,7 @@ class Nivel1(Nivel):
         block.change_x = 1
         block.player = self.player
         block.level = self
-        self.platform_list.add(block)
+        self.plataformas.add(block)
 
         block = platforms.MovingPlatform(platforms.GRASS1, 1)
         block.rect.x = 2666
@@ -344,7 +316,7 @@ class Nivel1(Nivel):
         block.change_x = 1
         block.player = self.player
         block.level = self
-        self.platform_list.add(block)
+        self.plataformas.add(block)
 
         block = platforms.MovingPlatform(platforms.GRASS1, 1)
         block.rect.x = 3320
@@ -354,7 +326,7 @@ class Nivel1(Nivel):
         block.change_x = 1
         block.player = self.player
         block.level = self
-        self.platform_list.add(block)
+        self.plataformas.add(block)
 
         # Add a custom moving platform
         block = platforms.MovingPlatform(platforms.GRASS1, 1)
@@ -365,7 +337,7 @@ class Nivel1(Nivel):
         block.change_y = -1
         block.player = self.player
         block.level = self
-        self.platform_list.add(block)
+        self.plataformas.add(block)
 
 
 class Nivel2(Nivel):
@@ -376,10 +348,10 @@ class Nivel2(Nivel):
 
         # Call the parent constructor
         Nivel.__init__(self, player)
-        self.id = 2
-        self.background = pygame.image.load("imagen/snow1.png").convert_alpha()
-        self.background.set_colorkey(constants.Color.BLANCO)
-        self.level_limit = -5650
+        self.id = 1
+        self.fondo = pygame.image.load("imagen/snow1.png").convert_alpha()
+        self.fondo.set_colorkey(constants.Color.BLANCO)
+        self.limite = -5650
 
         # Array with type of platform, and x, y location of the platform.
         level = [[platforms.GRASS2, 200, 536],
@@ -481,7 +453,7 @@ class Nivel2(Nivel):
             ene = platforms.Enemigo(enemigo[0], enemigo[1])
             ene.rect.x = enemigo[2]
             ene.rect.y = enemigo[3]
-            self.enemy_list.add(ene)
+            self.enemigos_l1.add(ene)
 
         for enem in enemigos1:
             ene = platforms.Enemigo1(enem[0])
@@ -491,7 +463,7 @@ class Nivel2(Nivel):
             ene.boundary_left = enem[4]
             ene.boundary_right = enem[5]
             ene.level = self
-            self.enemy_list2.add(ene)
+            self.enemigos_l2.add(ene)
 
         # Go through the array above and add platforms
         for platform in level:
@@ -499,13 +471,13 @@ class Nivel2(Nivel):
             block.rect.x = platform[1]
             block.rect.y = platform[2]
             block.player = self.player
-            self.platform_list.add(block)
+            self.plataformas.add(block)
 
         for obj in objetos:
             three_ob = platforms.Objeto(obj[0], 2)
             three_ob.rect.x = obj[1]
             three_ob.rect.y = obj[2]
-            self.object_list.add(three_ob)
+            self.objetos_l.add(three_ob)
 
         # Add a custom moving platform
         # Add a custom moving platform
@@ -535,7 +507,7 @@ class Nivel2(Nivel):
                 block.change_y = mov[6]
             block.player = self.player
             block.level = self
-            self.platform_list.add(block)
+            self.plataformas.add(block)
 
         block = platforms.MovingPlatform(platforms.GRASS1, 2)
         block.rect.x = 2666
@@ -545,7 +517,7 @@ class Nivel2(Nivel):
         block.change_x = 1
         block.player = self.player
         block.level = self
-        self.platform_list.add(block)
+        self.plataformas.add(block)
 
         # Add a custom moving platform
         block = platforms.MovingPlatform(platforms.GRASS1, 2)
@@ -556,7 +528,7 @@ class Nivel2(Nivel):
         block.change_y = -1
         block.player = self.player
         block.level = self
-        self.platform_list.add(block)
+        self.plataformas.add(block)
 
 
 class Nivel3(Nivel):
@@ -567,10 +539,10 @@ class Nivel3(Nivel):
 
         # Call the parent constructor
         Nivel.__init__(self, player)
-        self.id = 3
-        self.background = pygame.image.load("imagen/night1.png").convert_alpha()
-        self.background.set_colorkey(constants.Color.BLANCO)
-        self.level_limit = -5670
+        self.id = 2
+        self.fondo = pygame.image.load("imagen/night1.png").convert_alpha()
+        self.fondo.set_colorkey(constants.Color.BLANCO)
+        self.limite = -5670
 
         # Array with type of platform, and x, y location of the platform.
         level = [[platforms.GRASS2, 200, 536],
@@ -636,7 +608,7 @@ class Nivel3(Nivel):
             ene = platforms.Enemigo(enemigo[0], enemigo[1])
             ene.rect.x = enemigo[2]
             ene.rect.y = enemigo[3]
-            self.enemy_list.add(ene)
+            self.enemigos_l1.add(ene)
 
         for enem in enemigos1:
             ene = platforms.Enemigo2(enem[0])
@@ -646,7 +618,7 @@ class Nivel3(Nivel):
             ene.boundary_left = enem[4]
             ene.boundary_right = enem[5]
             ene.level = self
-            self.enemy_list2.add(ene)
+            self.enemigos_l2.add(ene)
 
         # Go through the array above and add platforms
         for platform in level:
@@ -654,13 +626,13 @@ class Nivel3(Nivel):
             block.rect.x = platform[1]
             block.rect.y = platform[2]
             block.player = self.player
-            self.platform_list.add(block)
+            self.plataformas.add(block)
 
         for obj in objetos:
             three_ob = platforms.Objeto(obj[0], 3)
             three_ob.rect.x = obj[1]
             three_ob.rect.y = obj[2]
-            self.object_list.add(three_ob)
+            self.objetos_l.add(three_ob)
 
         # Add a custom moving platform
         # Add a custom moving platform
@@ -695,7 +667,7 @@ class Nivel3(Nivel):
                 block.change_y = mov[6]
             block.player = self.player
             block.level = self
-            self.platform_list.add(block)
+            self.plataformas.add(block)
 
         # Add a custom moving platform
         block = platforms.MovingPlatform(platforms.GRASS1, 3)
@@ -706,4 +678,4 @@ class Nivel3(Nivel):
         block.change_y = 1
         block.player = self.player
         block.level = self
-        self.platform_list.add(block)
+        self.plataformas.add(block)
