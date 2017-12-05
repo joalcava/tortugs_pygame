@@ -1,21 +1,12 @@
-"""
-Module for managing platforms.
-"""
 import pygame
 import random
 
 from spritesheet_functions import SpriteSheet
 
-# These constants define our platform types:
-#   Name of file
-#   X location of sprite
-#   Y location of sprite
-#   Width of sprite
-#   Height of sprite
-
-GRASS1 = (448, 193, 64, 64)
-GRASS2 = (384, 257, 128, 64)
-GRASS3 = (0, 65, 192, 64)  # NO SIRVE
+# NOMBRE = (x, y, alto, ancho)
+PASTO1 = (448, 193, 64, 64)
+PASTO2 = (384, 257, 128, 64)
+PASTO3 = (0, 65, 192, 64)  # NO SIRVE
 TIERRA1 = (0, 138, 64, 64)
 TIERRA2 = (0, 138, 128, 64)
 TIERRA3 = (0, 138, 192, 64)
@@ -23,10 +14,10 @@ ARBOL = (0, 256, 192, 192)
 ROCA = (0, 453, 192, 60)
 FLORES = (192, 29, 64, 35)
 PLANTA = (141, 0, 42, 64)
-SNOWMAN = (448, 512, 64, 134)
+MUNECONIEVE = (448, 512, 64, 134)
 SNOWPLANT = (65, 0, 63, 64)
-SNOWBAL = (193, 449, 65, 62)
-SNOWARBOL = (188, 512, 134, 63)
+BOLANIEVE = (193, 449, 65, 62)
+ARBOLNIEVE = (188, 512, 134, 63)
 PLANTANIGHT = (64, 2, 66, 62)
 ROCANIGHT = (192, 513, 130, 126)
 COFREVERT = (0, 510, 64, 129)
@@ -57,9 +48,9 @@ class Shuriken(pygame.sprite.Sprite):
 
     def update(self):
         if self.direccion == "R":
-            self.rect.x += 5
+            self.rect.x += 6
         else:
-            self.rect.x -= 5
+            self.rect.x -= 6
         self.image = self.frames[self.frame_actual]
         self.temporizador += 1
         if (self.temporizador % 4) == 0:
@@ -80,197 +71,77 @@ class Bala(pygame.sprite.Sprite):
 
     def update(self):
         if self.direccion == "R":
-            self.rect.x += 5
+            self.rect.x += 4
         else:
-            self.rect.x -= 5
+            self.rect.x -= 4
 
 
 class Enemigo(pygame.sprite.Sprite):
-    def __init__(self, imagen, dispararNum):
-        self.stay_frame = []
+    def __init__(self, pos):
         pygame.sprite.Sprite.__init__(self)
-        image = pygame.image.load(imagen).convert_alpha()
+        image = pygame.image.load("imagen/enemigo1.png").convert_alpha()
+        self.stay_frame = []
         self.stay_frame.append(image)
-        image = pygame.transform.flip(image, True, False)
-        self.stay_frame.append(image)
+        self.stay_frame.append(pygame.transform.flip(image, True, False))
         self.image = self.stay_frame[0]
         self.rect = self.image.get_rect()
-        self.direccion = 0
-        self.ene = 0
-        self.disparar = random.randrange(dispararNum)
-        self.dispararN = dispararNum
-        self.vida = 1
-        self.des = random.randrange(dispararNum - 50)
-        self.cont = 0
+        self.rect.x = pos[0]
+        self.rect.y = pos[1]
+        self.direccion = "L"
+        self.cadencia = random.randrange(40, 100)
+        self.temporizador = 0
+
+    def atacar(self):
+        pass
+
+    def disparar(self):
+        self.temporizador += 1
+        if (self.temporizador % self.cadencia) == 0:
+            self.cadencia = random.randrange(40, 100)
+            self.temporizador = 0
+            bala = Bala()
+            bala.direccion = self.direccion
+            bala.rect.x = self.rect.x
+            bala.rect.y = self.rect.y
+            return bala
+        return None
 
     def update(self):
-        if self.cont > 6:
-            self.cont = 0
-
-        if self.direccion == 0:
+        if self.direccion == "L":
             self.image = self.stay_frame[0]
         else:
             self.image = self.stay_frame[1]
-        self.disparar -= 1
-        self.des -= 1
-        if self.des < 0:
-            self.des = random.randrange(self.dispararN - 50)
-
-        if self.disparar < 0:
-            self.disparar = random.randrange(self.dispararN)
-
-        if self.ene == 5 and self.des == 0:
-            if self.cont == 0:
-                self.rect.x += 500
-            if self.cont == 1:
-                self.rect.x -= 500
-            if self.cont == 2:
-                self.rect.y -= 100
-            if self.cont == 4:
-                self.rect.y -= 100
-            if self.cont == 5:
-                self.rect.y -= 100
-            if self.cont == 6:
-                self.rect.y = 414
-
-            self.cont += 1
-
-    def chocar(self):
-        self.vida -= 1
 
 
-class Enemigo2(pygame.sprite.Sprite):
-
-    def __init__(self, dispararNum):
-
-        self.change_x = 0
-
-        # This holds all the images for the animated walk left/right
-        # of our player
-        self.walking_frames_l = []
-        self.walking_frames_r = []
-        self.attack_frames_l = []
-        self.attack_frames_r = []
-        self.direction = "L"
-        level = None
-
+class EnemigoEstatico(Enemigo):
+    def __init__(self, pos):
         pygame.sprite.Sprite.__init__(self)
-
-        sprite_sheet = SpriteSheet("imagen/skeleton.png")
-        # Load all the right facing images into a list
-        image = sprite_sheet.get_image(39, 6, 30, 64)
-        self.walking_frames_l.append(image)
-        self.attack_frames_l.append(image)
-        image = pygame.transform.flip(image, True, False)
-        self.walking_frames_r.append(image)
-        self.attack_frames_r.append(image)
-
-        image = sprite_sheet.get_image(71, 6, 33, 64)
-        self.walking_frames_l.append(image)
-        self.attack_frames_l.append(image)
-        image = pygame.transform.flip(image, True, False)
-        self.walking_frames_r.append(image)
-        self.attack_frames_r.append(image)
-        image = sprite_sheet.get_image(110, 6, 30, 64)
-        self.walking_frames_l.append(image)
-        self.attack_frames_l.append(image)
-        image = pygame.transform.flip(image, True, False)
-        self.walking_frames_r.append(image)
-        self.attack_frames_r.append(image)
-        image = sprite_sheet.get_image(146, 5, 31, 66)
-        self.walking_frames_l.append(image)
-        self.attack_frames_l.append(image)
-        image = pygame.transform.flip(image, True, False)
-        self.walking_frames_r.append(image)
-        self.attack_frames_r.append(image)
-
-        self.image = self.walking_frames_l[0]
+        image = pygame.image.load("imagen/enemigo2.png").convert_alpha()
+        self.stay_frame = []
+        self.stay_frame.append(image)
+        self.stay_frame.append(pygame.transform.flip(image, True, False))
+        self.image = self.stay_frame[0]
         self.rect = self.image.get_rect()
+        self.rect.x = pos[0]
+        self.rect.y = pos[1]
+        self.direccion = "L"
+        self.cadencia = random.randrange(40, 100)
+        self.temporizador = 0
 
-        self.attack = False
-        self.cont_attack = -1
-        self.cont_even = 0
+    def atacar(self):
+        pass
 
-        self.boundary_left = 0
-        self.boundary_right = 0
-
-        self.direccion = 0
-
-        self.ene = 1
-
-        self.disparar = random.randrange(dispararNum)
-        self.atacar = random.randrange(dispararNum - 50)
-
-        self.dispararN = dispararNum
-
-        self.vida = 1
+    def disparar(self):
+        return None
 
     def update(self):
-        pos = self.rect.x + self.level.sumatoria_de_cambio
-
-        cur_pos = self.rect.x - self.level.sumatoria_de_cambio
-        if cur_pos < self.boundary_left or cur_pos > self.boundary_right:
-            self.change_x *= -1
-            if (self.change_x < 0):
-                self.direction = "L"
-                self.direccion = 0
-            else:
-                self.direction = "R"
-                self.direccion = 1
-
-        if self.attack:
-            if self.direction == "R":
-                self.image = self.attack_frames_r[self.cont_attack]
-                self.cont_even += 1
-                if (self.cont_even % 22) == 0:
-                    self.cont_attack += 1
-                if (self.cont_attack == 4):
-                    self.cont_attack = -1
-                    self.attack = False
-                    self.cont_even = 0
-            else:
-                self.image = self.attack_frames_l[self.cont_attack]
-                self.cont_even += 1
-                if (self.cont_even % 22) == 0:
-                    self.cont_attack += 1
-                if (self.cont_attack == 4):
-                    self.cont_attack = -1
-                    self.attack = False
-                    self.cont_even = 0
-
-
+        if self.direccion == "L":
+            self.image = self.stay_frame[0]
         else:
-            if self.direction == "R":
-                if self.change_x == 0:
-                    self.image = self.attack_frames_r[0]
-                else:
-                    frame = (pos // 30) % len(self.walking_frames_r)
-                    self.image = self.walking_frames_r[frame]
-            else:
-                if self.change_x == 0:
-                    self.image = self.attack_frames_l[0]
-                else:
-                    frame = (pos // 30) % len(self.walking_frames_l)
-                    self.image = self.walking_frames_l[frame]
-
-        self.rect.x += self.change_x
-
-        self.disparar -= 1
-        if self.disparar < 0:
-            self.disparar = random.randrange(self.dispararN)
-        self.atacar -= 1
-        if self.atacar < 0:
-            self.atacar = random.randrange(self.dispararN - 50)
-
-    def chocar(self):
-        self.vida -= 1
-
-    def Attack(self):
-        self.attack = True
-        self.cont_attack = 1
+            self.image = self.stay_frame[1]
 
 
-class Enemigo1(pygame.sprite.Sprite):
+class Enemigo1(Enemigo):
 
     def __init__(self, dispararNum):
 
@@ -282,7 +153,7 @@ class Enemigo1(pygame.sprite.Sprite):
         self.walking_frames_r = []
         self.attack_frames_l = []
         self.attack_frames_r = []
-        self.direction = "L"
+        self.direccion = "L"
         level = None
 
         pygame.sprite.Sprite.__init__(self)
@@ -367,14 +238,14 @@ class Enemigo1(pygame.sprite.Sprite):
         if cur_pos < self.boundary_left or cur_pos > self.boundary_right:
             self.change_x *= -1
             if (self.change_x < 0):
-                self.direction = "L"
+                self.direccion = "L"
                 self.direccion = 0
             else:
-                self.direction = "R"
+                self.direccion = "R"
                 self.direccion = 1
 
         if self.attack:
-            if self.direction == "R":
+            if self.direccion == "R":
                 self.image = self.attack_frames_r[self.cont_attack]
                 self.cont_even += 1
                 if (self.cont_even % 22) == 0:
@@ -395,7 +266,138 @@ class Enemigo1(pygame.sprite.Sprite):
 
 
         else:
-            if self.direction == "R":
+            if self.direccion == "R":
+                if self.change_x == 0:
+                    self.image = self.attack_frames_r[0]
+                else:
+                    frame = (pos // 30) % len(self.walking_frames_r)
+                    self.image = self.walking_frames_r[frame]
+            else:
+                if self.change_x == 0:
+                    self.image = self.attack_frames_l[0]
+                else:
+                    frame = (pos // 30) % len(self.walking_frames_l)
+                    self.image = self.walking_frames_l[frame]
+
+        self.rect.x += self.change_x
+
+        self.disparar -= 1
+        if self.disparar < 0:
+            self.disparar = random.randrange(self.dispararN)
+        self.atacar -= 1
+        if self.atacar < 0:
+            self.atacar = random.randrange(self.dispararN - 50)
+
+    def chocar(self):
+        self.vida -= 1
+
+    def Attack(self):
+        self.attack = True
+        self.cont_attack = 1
+
+
+class Enemigo2(Enemigo):
+
+    def __init__(self, dispararNum):
+
+        self.change_x = 0
+
+        # This holds all the images for the animated walk left/right
+        # of our player
+        self.walking_frames_l = []
+        self.walking_frames_r = []
+        self.attack_frames_l = []
+        self.attack_frames_r = []
+        self.direccion = "L"
+        level = None
+
+        pygame.sprite.Sprite.__init__(self)
+
+        sprite_sheet = SpriteSheet("imagen/skeleton.png")
+        # Load all the right facing images into a list
+        image = sprite_sheet.get_image(39, 6, 30, 64)
+        self.walking_frames_l.append(image)
+        self.attack_frames_l.append(image)
+        image = pygame.transform.flip(image, True, False)
+        self.walking_frames_r.append(image)
+        self.attack_frames_r.append(image)
+
+        image = sprite_sheet.get_image(71, 6, 33, 64)
+        self.walking_frames_l.append(image)
+        self.attack_frames_l.append(image)
+        image = pygame.transform.flip(image, True, False)
+        self.walking_frames_r.append(image)
+        self.attack_frames_r.append(image)
+        image = sprite_sheet.get_image(110, 6, 30, 64)
+        self.walking_frames_l.append(image)
+        self.attack_frames_l.append(image)
+        image = pygame.transform.flip(image, True, False)
+        self.walking_frames_r.append(image)
+        self.attack_frames_r.append(image)
+        image = sprite_sheet.get_image(146, 5, 31, 66)
+        self.walking_frames_l.append(image)
+        self.attack_frames_l.append(image)
+        image = pygame.transform.flip(image, True, False)
+        self.walking_frames_r.append(image)
+        self.attack_frames_r.append(image)
+
+        self.image = self.walking_frames_l[0]
+        self.rect = self.image.get_rect()
+
+        self.attack = False
+        self.cont_attack = -1
+        self.cont_even = 0
+
+        self.boundary_left = 0
+        self.boundary_right = 0
+
+        self.direccion = 0
+
+        self.ene = 1
+
+        self.disparar = random.randrange(dispararNum)
+        self.atacar = random.randrange(dispararNum - 50)
+
+        self.dispararN = dispararNum
+
+        self.vida = 1
+
+    def update(self):
+        pos = self.rect.x + self.level.sumatoria_de_cambio
+
+        cur_pos = self.rect.x - self.level.sumatoria_de_cambio
+        if cur_pos < self.boundary_left or cur_pos > self.boundary_right:
+            self.change_x *= -1
+            if (self.change_x < 0):
+                self.direccion = "L"
+                self.direccion = 0
+            else:
+                self.direccion = "R"
+                self.direccion = 1
+
+        if self.attack:
+            if self.direccion == "R":
+                self.image = self.attack_frames_r[self.cont_attack]
+                self.cont_even += 1
+                if (self.cont_even % 22) == 0:
+                    self.cont_attack += 1
+                if (self.cont_attack == 4):
+                    self.cont_attack = -1
+                    self.attack = False
+                    self.cont_even = 0
+            else:
+                self.image = self.attack_frames_l[self.cont_attack]
+                self.cont_even += 1
+                if (self.cont_even % 22) == 0:
+                    self.cont_attack += 1
+                if (self.cont_attack == 4):
+                    self.cont_attack = -1
+                    self.attack = False
+                    self.cont_even = 0
+
+
+        else:
+            if self.direccion == "R":
                 if self.change_x == 0:
                     self.image = self.attack_frames_r[0]
                 else:
@@ -447,7 +449,7 @@ class Objeto(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
 
 
-class Platform(pygame.sprite.Sprite):
+class Plataforma(pygame.sprite.Sprite):
 
     def __init__(self, sprite_sheet_data, nivel):
         pygame.sprite.Sprite.__init__(self)
@@ -468,7 +470,7 @@ class Platform(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
 
 
-class MovingPlatform(Platform):
+class PlataformaEnMovimiento(Plataforma):
     """ This is a fancier platform that can actually move. """
     change_x = 0
     change_y = 0
@@ -522,7 +524,7 @@ class MovingPlatform(Platform):
                 self.player.rect.top = self.rect.bottom
 
         # Check the boundaries and see if we need to reverse
-        # direction.
+        # direccion.
         if self.rect.bottom > self.boundary_bottom or self.rect.top < self.boundary_top:
             self.change_y *= -1
 

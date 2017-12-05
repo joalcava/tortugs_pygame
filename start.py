@@ -60,7 +60,7 @@ def jugar():
 
     fin = False
     player = Player()
-    niveles = [Nivel1(player), Nivel2(player), Nivel3(player)]
+    niveles = [Nivel1(player), Nivel2(player)]#, Nivel3(player)]
     nivel_actual = niveles[0]
     player_group = pygame.sprite.Group()
     player.nivel_actual = nivel_actual
@@ -97,12 +97,12 @@ def jugar():
                     if player.shurikens > 0:
                         shuriken = platforms.Shuriken(player.direccion, True)
                         if player.direccion == "R":
-                            shuriken.rect.x = player.rect.x + 50
-                            shuriken.rect.y = player.rect.y + 45
+                            shuriken.rect.x = player.rect.x + 30
+                            shuriken.rect.y = player.rect.y + 5
                         else:
-                            shuriken.rect.x = player.rect.x - 5
-                            shuriken.rect.y = player.rect.y + 45
-                        nivel_actual.lista_bala.add(shuriken)
+                            shuriken.rect.x = player.rect.x - 30
+                            shuriken.rect.y = player.rect.y + 5
+                        nivel_actual.balas.add(shuriken)
                         player.shurikens -= 1
 
                 # Pausar
@@ -165,7 +165,7 @@ def jugar():
                 _pantalla.blit(texto, (40, const.ALTO_PANTALLA / 2 - 100))
                 pygame.display.flip()
                 time.sleep(4)
-        if nivel_actual.id == 2 and len(nivel_actual.enemigos_l1) == 0:
+        if nivel_actual.id == 2 and len(nivel_actual.enemigos) == 0:
             fuente = pygame.font.Font('fuentes/ninja-turtles-regular.otf', 80)
             texto = fuente.render("BOO YAH, GANASTE!", True, Color.VERDE)
             _pantalla.blit(texto, (40, const.ALTO_PANTALLA / 2 - 100))

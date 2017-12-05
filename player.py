@@ -1,7 +1,7 @@
 import pygame
 import constants
 
-from platforms import MovingPlatform
+from platforms import PlataformaEnMovimiento
 
 
 class Player(pygame.sprite.Sprite):
@@ -21,6 +21,7 @@ class Player(pygame.sprite.Sprite):
     perdio = False
     atacando = False
     inmune = 0
+    retrocediendo = 0
     temporizador = 0
     cont_ataque_frame = -1
     cont_dead_frame = -1
@@ -119,9 +120,20 @@ class Player(pygame.sprite.Sprite):
 
     def atacar(self):
         if not self.muerto:
+            if self.direccion == "L":
+                self.rect.left -= 20
+            else:
+                self.rect.right += 20
             self.atacando = True
             self.cont_ataque_frame = 0
             self.sonido_ataque.play()
+
+    def retroceder(self):
+        self.retrocediendo = 6
+        if self.direccion == "L":
+            self.dx = 4
+        else:
+            self.dx = -4
 
     def mover_izquierda(self):
         if not self.muerto:
@@ -142,6 +154,12 @@ class Player(pygame.sprite.Sprite):
         pos = self.rect.x + self.nivel_actual.sumatoria_de_cambio
         self.inmune -= 1
 
+        if self.retrocediendo > 0:
+            self.retrocediendo -= 1
+            if self.retrocediendo == 0:
+                self.parar()
+                self.retrocediendo = 0
+
         if self.muerto is False and self.perdio is False:
             if self.atacando:
                 if self.direccion == "R":
@@ -152,7 +170,7 @@ class Player(pygame.sprite.Sprite):
                 if (self.temporizador % 8) == 0:
                     self.cont_ataque_frame += 1
                 if self.cont_ataque_frame == len(self.imgs_atacando_der):
-                    self.cont_ataque_frame = -1
+                    self.cont_ataque_frame = 0
                     self.atacando = False
                     self.temporizador = 0
 
@@ -206,5 +224,5 @@ class Player(pygame.sprite.Sprite):
                 elif self.dy < 0:
                     self.rect.top = block.rect.bottom
             self.dy = 0  # Detener el movimiento vertical
-            if isinstance(block, MovingPlatform):  # Si colisiono con una plataforma en movimiento
+            if isinstance(block, PlataformaEnMovimiento):  # Si colisiono con una plataforma en movimiento
                 self.rect.x += block.change_x  # mover al jugador con la plataforma
