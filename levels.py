@@ -1,11 +1,18 @@
 import pygame
-
 import constants
 import platforms
 
+from platforms import\
+    Enemigo,\
+    Enemigo1,\
+    Enemigo2,\
+    EnemigoEstatico,\
+    PlataformaEnMovimiento,\
+    Plataforma,\
+    Objeto
+
 
 class Nivel:
-
     plataformas = None
     enemigos = None
     objetos = None
@@ -103,7 +110,8 @@ class Nivel1(Nivel):
         self.id = 0
         self.fondo = pygame.image.load("imagen/nivel1.jpg").convert_alpha()
         self.fondo.set_colorkey(constants.Color.BLANCO)
-        self.limite = -3300
+        self.limite = -100
+        #self.limite = -3300
 
         level = [
             [platforms.PASTO2, 200, 536],
@@ -196,7 +204,7 @@ class Nivel1(Nivel):
                     platforms.Enemigo(enemigo[1]))
             elif enemigo[0] == 2:
                 self.enemigos.add(
-                    platforms.EnemigoEstatico(enemigo[1]))
+                    platforms.EnemigoEstatico(enemigo[1], enemigo[0]))
 
         for objeto in objetos:
             obj = platforms.Objeto(objeto[0], 1)
@@ -211,7 +219,7 @@ class Nivel1(Nivel):
             block.player = self.player
             self.plataformas.add(block)
 
-        block = platforms.PlataformaEnMovimiento(platforms.PASTO1, 1)
+        block = PlataformaEnMovimiento(platforms.PASTO1, 1)
         block.rect.x = 1350
         block.rect.y = 280
         block.boundary_left = 1350
@@ -221,7 +229,7 @@ class Nivel1(Nivel):
         block.level = self
         self.plataformas.add(block)
 
-        block = platforms.PlataformaEnMovimiento(platforms.PASTO1, 1)
+        block = PlataformaEnMovimiento(platforms.PASTO1, 1)
         block.rect.x = 2666
         block.rect.y = 300
         block.boundary_left = 2666
@@ -231,7 +239,7 @@ class Nivel1(Nivel):
         block.level = self
         self.plataformas.add(block)
 
-        block = platforms.PlataformaEnMovimiento(platforms.PASTO1, 1)
+        block = PlataformaEnMovimiento(platforms.PASTO1, 1)
         block.rect.x = 3320
         block.rect.y = 400
         block.boundary_left = 3320
@@ -241,7 +249,7 @@ class Nivel1(Nivel):
         block.level = self
         self.plataformas.add(block)
 
-        block = platforms.PlataformaEnMovimiento(platforms.PASTO1, 1)
+        block = PlataformaEnMovimiento(platforms.PASTO1, 1)
         block.rect.x = 1690
         block.rect.y = 300
         block.boundary_top = 100
@@ -256,141 +264,115 @@ class Nivel2(Nivel):
 
     def __init__(self, player):
         Nivel.__init__(self, player)
+        self.id = 1
+        self.fondo = pygame.image.load("imagen/night1.png").convert_alpha()
+        self.fondo.set_colorkey(constants.Color.BLANCO)
+        limite = 100
+        #self.limite = -5670
 
-        self.fondo = pygame.image.load("night1.png").convert_alpha()
-        self.fondo.set_colorkey(constants.WHITE)
-        self.level_limit = -5670
-
-        level = [ [platforms.PASTO2, 200, 536],
-                  [platforms.PASTO2, 320, 536],
-                  [platforms.PASTO3, 550, 500],
-                  [platforms.TIERRA3, 550, 564],
-                  [platforms.TIERRA3, 737, 564],
-                  [platforms.PASTO3, 737, 500],
-                  [platforms.GRASS1, 500, 320],
-                  [platforms.GRASS1, 390, 410],
-                  [platforms.GRASS1, 690, 310],
-                  [platforms.GRASS1, 960, 320],
-                  [platforms.PASTO2, 1200, 400],
-                  [platforms.PASTO3, 1850, 450],
-                  [platforms.TIERRA3, 1850, 514],
-                  [platforms.TIERRA3, 1850, 578],
-                  [platforms.PASTO3, 2037, 450],
-                  [platforms.TIERRA3, 2037, 514],
-                  [platforms.TIERRA3, 2037, 578],
-                  [platforms.PASTO3, 2224, 450],
-                  [platforms.TIERRA3, 2224, 514],
-                  [platforms.TIERRA3, 2224, 578],
-                  [platforms.GRASS1, 2800, 400],
-                  [platforms.PASTO3, 3100, 200],
-                  [platforms.PASTO3, 3830, 200],
-                  [platforms.PASTO3, 5000, 400],
-                  [platforms.PASTO3, 5187, 400],
-                  [platforms.PASTO3, 6100, 400],
-
-
-
-
-                  ]
-
+        level = [
+            [platforms.PASTO2, 200, 536],
+            [platforms.PASTO2, 320, 536],
+            [platforms.PASTO3, 550, 500],
+            [platforms.TIERRA3, 550, 564],
+            [platforms.TIERRA3, 737, 564],
+            [platforms.PASTO3, 737, 500],
+            [platforms.PASTO1, 500, 320],
+            [platforms.PASTO1, 390, 410],
+            [platforms.PASTO1, 690, 310],
+            [platforms.PASTO1, 960, 320],
+            [platforms.PASTO2, 1200, 400],
+            [platforms.PASTO3, 1850, 450],
+            [platforms.TIERRA3, 1850, 514],
+            [platforms.TIERRA3, 1850, 578],
+            [platforms.PASTO3, 2037, 450],
+            [platforms.TIERRA3, 2037, 514],
+            [platforms.TIERRA3, 2037, 578],
+            [platforms.PASTO3, 2224, 450],
+            [platforms.TIERRA3, 2224, 514],
+            [platforms.TIERRA3, 2224, 578],
+            [platforms.PASTO1, 2800, 400],
+            [platforms.PASTO3, 3100, 200],
+            [platforms.PASTO3, 3830, 200],
+            [platforms.PASTO3, 5000, 400],
+            [platforms.PASTO3, 5187, 400],
+            [platforms.PASTO3, 6100, 400],
+        ]
 
         objetos = [
-                    [platforms.COFREVERT,300,407],
-                    [platforms.COFREHORI,600,436],
-                    [platforms.COFREHORI,1860,386],
-                    [platforms.COFREVERT,2030,321],
-                    [platforms.COFREHORI,6130,336],
-
-
-
-                  ]
-
+            [platforms.COFREVERT, 300, 407],
+            [platforms.COFREHORI, 600, 436],
+            [platforms.COFREHORI, 1860, 386],
+            [platforms.COFREVERT, 2030, 321],
+            [platforms.COFREHORI, 6130, 336],
+        ]
 
         enemigos = [
-                    ["skull-game-obstacle.png",100,1250,345],
-                    ["skull-game-obstacle.png",200,2000,395],
-                    ["skull-game-obstacle.png",200,2300,395],
-                    ["skull-game-obstacle.png",200,3180,145],
-                    ["skull-game-obstacle.png",200,3840,145],
-                    ["skull-game-obstacle.png",200,3950,145],
-                    ["skull-game-obstacle.png",200,5050,345],
-                    ["skull-game-obstacle.png",150,5250,345],
-                    ["skull-game-obstacle.png",100,5310,345],
+            ["skull", (1250, 345)],
+            ["skull", (2000, 395)],
+            ["skull", (2300, 395)],
+            ["skull", (3180, 145)],
+            ["skull", (3840, 145)],
+            ["skull", (3950, 145)],
+            ["skull", (5050, 345)],
+            ["skull", (5250, 345)],
+            ["skull", (5310, 345)]
+        ]
 
-                   ]
-
-        enemigos1= [
-                    [200,560,434,-1,550,910],
-                    [200,2100,384,-1,2010,2400],
-                    [200,3200,136,-1,3110,3240],
-                    [200,5110,336,-1,5010,5300],
-                    [200,5210,336,-1,5110,5350],
-
-
-                   ]
-
+        enemigos1 = [
+            [200, 560, 434, -1, 550, 910],
+            [200, 2100, 384, -1, 2010, 2400],
+            [200, 3200, 136, -1, 3110, 3240],
+            [200, 5110, 336, -1, 5010, 5300],
+            [200, 5210, 336, -1, 5110, 5350],
+        ]
 
         for enemigo in enemigos:
-            print enemigo[0]
-            ene = platforms.Enemigo(enemigo[0],enemigo[1])
-            ene.rect.x=enemigo[2]
-            ene.rect.y=enemigo[3]
-            self.enemy_list.add(ene)
+            self.enemigos.add(EnemigoEstatico(enemigo[1], enemigo[0]))
 
         for enem in enemigos1:
-            ene = platforms.Enemigo2(enem[0])
+            ene = Enemigo2(enem[0])
             ene.rect.x = enem[1]
             ene.rect.y = enem[2]
-            ene.change_x = enem[3]
+            ene.dx = enem[3]
             ene.boundary_left = enem[4]
             ene.boundary_right = enem[5]
-            ene.level = self
-            self.enemy_list2.add(ene)
+            ene.nivel = self
+            self.enemigos.add(ene)
 
         # Go through the array above and add platforms
         for platform in level:
-            block = platforms.Platform(platform[0],3)
+            block = Plataforma(platform[0], 3)
             block.rect.x = platform[1]
             block.rect.y = platform[2]
             block.player = self.player
-            self.platform_list.add(block)
-
+            self.plataformas.add(block)
 
         for obj in objetos:
-            three_ob = platforms.Objeto(obj[0],3)
+            three_ob = Objeto(obj[0], 3)
             three_ob.rect.x = obj[1]
             three_ob.rect.y = obj[2]
-            self.object_list.add(three_ob)
-
-        # Add a custom moving platform
-        # Add a custom moving platform
+            self.objetos.add(three_ob)
 
         movimiento = [
-                    [platforms.GRASS1, 1350, 400, "Y", 100, 500, -1],
-                    [platforms.GRASS1, 1470, 450, "Y", 100, 500, -1],
-                    [platforms.GRASS1, 1590, 300, "Y", 100, 500, -1],
-                    [platforms.GRASS1, 2520, 380, "X", 2520, 2700, 1],
-                    [platforms.GRASS1, 2920, 300, "Y", 100, 500, -1],
-                    [platforms.GRASS1, 3300, 200, "X", 3300, 3750, 2],
-                    #[platforms.GRASS1, 3950, 400, "Y", 100, 500, -1],
-                    [platforms.GRASS1, 4100, 200, "X", 4100, 4530, 2],
-                    [platforms.GRASS1, 4600, 450, "Y", 100, 500, -1],
-                    [platforms.GRASS1, 4750, 300, "Y", 100, 500, -1],
-                    [platforms.GRASS1, 5390, 400, "X", 5390, 6000, 2],
-                    [platforms.PASTO2, 6320, 400, "X", 6320, 6800, 3],
-
-
-
-
-
-
-                   ]
+            [platforms.PASTO1, 1350, 400, "Y", 100, 500, -1],
+            [platforms.PASTO1, 1470, 450, "Y", 100, 500, -1],
+            [platforms.PASTO1, 1590, 300, "Y", 100, 500, -1],
+            [platforms.PASTO1, 2520, 380, "X", 2520, 2700, 1],
+            [platforms.PASTO1, 2920, 300, "Y", 100, 500, -1],
+            [platforms.PASTO1, 3300, 200, "X", 3300, 3750, 2],
+            [platforms.PASTO1, 4100, 200, "X", 4100, 4530, 2],
+            [platforms.PASTO1, 4600, 450, "Y", 100, 500, -1],
+            [platforms.PASTO1, 4750, 300, "Y", 100, 500, -1],
+            [platforms.PASTO1, 5390, 400, "X", 5390, 6000, 2],
+            [platforms.PASTO2, 6320, 400, "X", 6320, 6800, 3],
+        ]
 
         for mov in movimiento:
-            block = platforms.MovingPlatform(mov[0],3)
+            block = PlataformaEnMovimiento(mov[0], 3)
             block.rect.x = mov[1]
             block.rect.y = mov[2]
-            if(mov[3]=="X"):
+            if mov[3] == "X":
                 block.boundary_left = mov[4]
                 block.boundary_right = mov[5]
                 block.change_x = mov[6]
@@ -400,14 +382,9 @@ class Nivel2(Nivel):
                 block.change_y = mov[6]
             block.player = self.player
             block.level = self
-            self.platform_list.add(block)
+            self.plataformas.add(block)
 
-
-
-
-
-        # Add a custom moving platform
-        block = platforms.MovingPlatform(platforms.GRASS1,3)
+        block = PlataformaEnMovimiento(platforms.PASTO1, 3)
         block.rect.x = 1690
         block.rect.y = 300
         block.boundary_top = 100
@@ -415,327 +392,164 @@ class Nivel2(Nivel):
         block.change_y = 1
         block.player = self.player
         block.level = self
-        self.platform_list.add(block)
-
-
-
-    """ Definition for level 2. """
-
-    def __init__(self, player):
-        """ Create level 1. """
-
-        # Call the parent constructor
-        Level.__init__(self, player)
-
-        self.fondo = pygame.image.load("snow1.png").convert_alpha()
-        self.fondo.set_colorkey(constants.WHITE)
-        self.level_limit = -1000
-
-        # Array with type of platform, and x, y location of the platform.
-        level = [ [platforms.PASTO2, 200, 536],
-                  [platforms.PASTO2, 320, 536],
-                  [platforms.PASTO3, 550, 500],
-                  [platforms.TIERRA3, 550, 564],
-                  [platforms.TIERRA3, 737, 564],
-                  [platforms.PASTO3, 737, 500],
-                  [platforms.PASTO3, 924, 500],
-                  [platforms.TIERRA3, 924, 564],
-                  [platforms.PASTO3, 1111, 500],
-                  [platforms.TIERRA3, 1111, 564],
-                  [platforms.PASTO3, 1111, 500],
-                  [platforms.TIERRA3, 1111, 564],
-                  [platforms.PASTO3, 1298, 500],
-                  [platforms.TIERRA3, 1298, 564],
-                  [platforms.PASTO3, 1485, 500],
-                  [platforms.TIERRA3, 1485, 564],
-                  [platforms.PASTO3, 1672, 500],
-                  [platforms.TIERRA3, 1672, 564],
-                  [platforms.PASTO3, 1859, 500],
-                  [platforms.TIERRA3, 1859, 564],
-                  [platforms.PASTO3, 2051, 500],
-                  [platforms.TIERRA3, 2051, 564],
-
-
-
-
-
-
-                  ]
-
-
-        objetos = [
-
-
-
-
-                  ]
-
-
-        enemigos = [
-                    ["skull-game-obstacle.png",100,1250,445],
-                    ["skull-game-obstacle.png",200,1000,445],
-                    ["skull-game-obstacle.png",100,600,445],
-                    ["skull-game-obstacle.png",200,800,445],
-
-
-                   ]
-
-        enemigos1= [
-
-                   ]
-
-
-
-
-        for enemigo in enemigos:
-            print enemigo[0]
-            ene = platforms.Enemigo(enemigo[0],enemigo[1])
-            ene.rect.x=enemigo[2]
-            ene.rect.y=enemigo[3]
-            self.enemy_list.add(ene)
-
-        for enem in enemigos1:
-            ene = platforms.Enemigo2(enem[0])
-            ene.rect.x = enem[1]
-            ene.rect.y = enem[2]
-            ene.change_x = enem[3]
-            ene.boundary_left = enem[4]
-            ene.boundary_right = enem[5]
-            ene.level = self
-            self.enemy_list2.add(ene)
-
-        # Go through the array above and add platforms
-        for platform in level:
-            block = platforms.Platform(platform[0],2)
-            block.rect.x = platform[1]
-            block.rect.y = platform[2]
-            block.player = self.player
-            self.platform_list.add(block)
-
-
-        for obj in objetos:
-            three_ob = platforms.Objeto(obj[0],2)
-            three_ob.rect.x = obj[1]
-            three_ob.rect.y = obj[2]
-            self.object_list.add(three_ob)
-
-        # Add a custom moving platform
-        # Add a custom moving platform
-
-        movimiento = [
-
-
-
-
-
-
-                   ]
-
-        for mov in movimiento:
-            block = platforms.MovingPlatform(mov[0],3)
-            block.rect.x = mov[1]
-            block.rect.y = mov[2]
-            if(mov[3]=="X"):
-                block.boundary_left = mov[4]
-                block.boundary_right = mov[5]
-                block.change_x = mov[6]
-            else:
-                block.boundary_top = mov[4]
-                block.boundary_bottom = mov[5]
-                block.change_y = mov[6]
-            block.player = self.player
-            block.level = self
-            self.platform_list.add(block)
+        self.plataformas.add(block)
 
 
 class Nivel3(Nivel):
 
     def __init__(self, jugador):
         Nivel.__init__(self, jugador)
+        self.id = 2
+        self.fondo = pygame.image.load("imagen/castle1.png").convert_alpha()
+        self.fondo.set_colorkey(constants.Color.BLANCO)
+        self.limite = -3100
 
-        self.background = pygame.image.load("castle1.png").convert_alpha()
-        self.background.set_colorkey(constants.WHITE)
-        self.level_limit = -3100
-
-        level = [ [platforms.PASTO2, 200, 536],
-                  [platforms.PASTO2, 320, 536],
-                  [platforms.PASTO3, 550, 500],
-                  [platforms.TIERRA3, 550, 564],
-                  [platforms.TIERRA3, 737, 564],
-                  [platforms.PASTO3, 737, 500],
-                  [platforms.PASTO3, 924, 500],
-                  [platforms.TIERRA3, 924, 564],
-                  [platforms.PASTO3, 1111, 500],
-                  [platforms.TIERRA3, 1111, 564],
-                  [platforms.PASTO3, 1111, 500],
-                  [platforms.TIERRA3, 1111, 564],
-                  [platforms.PASTO3, 1298, 500],
-                  [platforms.TIERRA3, 1298, 564],
-                  [platforms.PASTO3, 1485, 500],
-                  [platforms.TIERRA3, 1485, 564],
-                  [platforms.PASTO3, 1672, 500],
-                  [platforms.TIERRA3, 1672, 564],
-                  [platforms.PASTO3, 1859, 500],
-                  [platforms.TIERRA3, 1859, 564],
-                  [platforms.PASTO3, 2051, 500],
-                  [platforms.TIERRA3, 2051, 564],
-                  [platforms.PASTO3, 2230, 500],
-                  [platforms.TIERRA3, 2230, 564],
-                  [platforms.PASTO3, 2425, 500],
-                  [platforms.TIERRA3, 2425, 564],
-                  [platforms.PASTO3, 2612, 500],
-                  [platforms.TIERRA3, 2612, 564],
-                  [platforms.PASTO3, 2799, 500],
-                  [platforms.TIERRA3, 2799, 564],
-                  [platforms.PASTO3, 2986, 500],
-                  [platforms.TIERRA3, 2986, 564],
-                  [platforms.PASTO3, 3173, 500],
-                  [platforms.TIERRA3, 3173, 564],
-                  [platforms.PASTO3, 3360, 500],
-                  [platforms.TIERRA3, 3360, 564],
-                  [platforms.PASTO3, 3547, 500],
-                  [platforms.TIERRA3, 3547, 564],
-                  [platforms.PASTO3, 3734, 500],
-                  [platforms.TIERRA3, 3734, 564],
-                  [platforms.PASTO3, 3921, 500],
-                  [platforms.TIERRA3, 3921, 564],
-                  [platforms.PASTO3, 4108, 500],
-                  [platforms.TIERRA3, 4108, 564],
-
-
-
-
-
-
-                  ]
-
-
+        level = [
+            (platforms.PASTO2, 200, 536),
+            (platforms.PASTO2, 320, 536),
+            (platforms.PASTO3, 550, 500),
+            (platforms.TIERRA3, 550, 564),
+            (platforms.TIERRA3, 737, 564),
+            (platforms.PASTO3, 737, 500),
+            (platforms.PASTO3, 924, 500),
+            (platforms.TIERRA3, 924, 564),
+            (platforms.PASTO3, 1111, 500),
+            (platforms.TIERRA3, 1111, 564),
+            (platforms.PASTO3, 1111, 500),
+            (platforms.TIERRA3, 1111, 564),
+            (platforms.PASTO3, 1298, 500),
+            (platforms.TIERRA3, 1298, 564),
+            (platforms.PASTO3, 1485, 500),
+            (platforms.TIERRA3, 1485, 564),
+            (platforms.PASTO3, 1672, 500),
+            (platforms.TIERRA3, 1672, 564),
+            (platforms.PASTO3, 1859, 500),
+            (platforms.TIERRA3, 1859, 564),
+            (platforms.PASTO3, 2051, 500),
+            (platforms.TIERRA3, 2051, 564),
+            (platforms.PASTO3, 2230, 500),
+            (platforms.TIERRA3, 2230, 564),
+            (platforms.PASTO3, 2425, 500),
+            (platforms.TIERRA3, 2425, 564),
+            (platforms.PASTO3, 2612, 500),
+            (platforms.TIERRA3, 2612, 564),
+            (platforms.PASTO3, 2799, 500),
+            (platforms.TIERRA3, 2799, 564),
+            (platforms.PASTO3, 2986, 500),
+            (platforms.TIERRA3, 2986, 564),
+            (platforms.PASTO3, 3173, 500),
+            (platforms.TIERRA3, 3173, 564),
+            (platforms.PASTO3, 3360, 500),
+            (platforms.TIERRA3, 3360, 564),
+            (platforms.PASTO3, 3547, 500),
+            (platforms.TIERRA3, 3547, 564),
+            (platforms.PASTO3, 3734, 500),
+            (platforms.TIERRA3, 3734, 564),
+            (platforms.PASTO3, 3921, 500),
+            (platforms.TIERRA3, 3921, 564),
+            (platforms.PASTO3, 4108, 500),
+            (platforms.TIERRA3, 4108, 564),
+        ]
 
         objetos = [
-                    [platforms.PUERTA,4050,329],
-                    [platforms.FUEGO,750,375],
-                    [platforms.FUEGO,2250,375],
-                    [platforms.FUEGO,3750,375],
-                    [platforms.TRAJE,200,373],
-                    [platforms.TRAJE,1200,373],
-                    [platforms.TRAJE,1900,373],
-                    [platforms.TRAJE,2500,373],
-                    [platforms.TRAJE,3500,373],
-                    [platforms.HERRAMIENTAS,260,373],
-                    [platforms.HERRAMIENTAS,1300,373],
-                    [platforms.HERRAMIENTAS,2000,373],
-                    [platforms.HERRAMIENTAS,2600,373],
-                    [platforms.HERRAMIENTAS,3300,373],
-
-
-
-
-
-
-                  ]
-
+            (platforms.PUERTA, 4050, 329),
+            (platforms.FUEGO, 750, 375),
+            (platforms.FUEGO, 2250, 375),
+            (platforms.FUEGO, 3750, 375),
+            (platforms.TRAJE, 200, 373),
+            (platforms.TRAJE, 1200, 373),
+            (platforms.TRAJE, 1900, 373),
+            (platforms.TRAJE, 2500, 373),
+            (platforms.TRAJE, 3500, 373),
+            (platforms.HERRAMIENTAS, 260, 373),
+            (platforms.HERRAMIENTAS, 1300, 373),
+            (platforms.HERRAMIENTAS, 2000, 373),
+            (platforms.HERRAMIENTAS, 2600, 373),
+            (platforms.HERRAMIENTAS, 3300, 373),
+        ]
 
         enemigos = [
-                    ["skull-game-obstacle.png",100,550,445],
-                    ["skull-game-obstacle.png",200,800,445],
-                    ["skull-game-obstacle.png",200,1000,445],
-                    ["skull-game-obstacle.png",200,1100,445],
-                    ["skull-game-obstacle.png",200,1500,445],
-                    ["skull-game-obstacle.png",200,1800,445],
-                    ["skull-game-obstacle.png",200,2000,445],
-                    ["skull-game-obstacle.png",150,2200,445],
-                    ["skull-game-obstacle.png",100,2500,445],
-                    ["skull-game-obstacle.png",100,2800,445],
+            ("skull", (550, 445)),
+            ("skull", (800, 445)),
+            ("skull", (1000, 445)),
+            ("skull", (1100, 445)),
+            ("skull", (1500, 445)),
+            ("skull", (1800, 445)),
+            ("skull", (2000, 445)),
+            ("skull", (2200, 445)),
+            ("skull", (2500, 445)),
+            ("skull", (2800, 445)),
+        ]
 
-                   ]
+        enemigos1 = [
+            (200, 560, 434, -1, 550, 910),
+            (200, 1050, 434, -1, 1000, 1500),
+            (200, 1550, 434, -1, 1500, 1800),
+            (200, 1850, 434, -1, 1800, 2000),
+            (200, 2150, 434, -1, 2100, 2300),
+            (200, 2350, 434, -1, 2300, 2500),
+            (200, 2550, 434, -1, 2500, 2700),
+        ]
 
-        enemigos1= [
-                    [200,560,434,-1,550,910],
-                    [200,1050,434,-1,1000,1500],
-                    [200,1550,434,-1,1500,1800],
-                    [200,1850,434,-1,1800,2000],
-                    [200,2150,434,-1,2100,2300],
-                    [200,2350,434,-1,2300,2500],
-                    [200,2550,434,-1,2500,2700],
+        enemigos2 = [
+            (200, 660, 424, -1, 650, 910),
+            (200, 1150, 424, -1, 1100, 1600),
+            (200, 1650, 424, -1, 1600, 1900),
+            (200, 1950, 424, -1, 1700, 2100),
+            (200, 2250, 424, -1, 2200, 2400),
+            (200, 2450, 424, -1, 2400, 2600),
+            (200, 2650, 424, -1, 2600, 2800),
+        ]
 
-
-                   ]
-
-        enemigos2= [
-                    [200,660,424,-1,650,910],
-                    [200,1150,424,-1,1100,1600],
-                    [200,1650,424,-1,1600,1900],
-                    [200,1950,424,-1,1700,2100],
-                    [200,2250,424,-1,2200,2400],
-                    [200,2450,424,-1,2400,2600],
-                    [200,2650,424,-1,2600,2800],
-
-
-                   ]
-
-
-        ene = platforms.Enemigo("boss.png",150)
-        ene.rect.x=3400
-        ene.rect.y=414
-        ene.ene = 5
-        self.enemy_list.add(ene)
-
+        # ene = Enemigo("boss.png", 150)
+        # ene.rect.x = 3400
+        # ene.rect.y = 414
+        # ene.ene = 5
+        # self.enemigos.add(ene)
 
         for enemigo in enemigos:
-            print enemigo[0]
-            ene = platforms.Enemigo(enemigo[0],enemigo[1])
-            ene.rect.x=enemigo[2]
-            ene.rect.y=enemigo[3]
-            self.enemy_list.add(ene)
+            self.enemigos.add(EnemigoEstatico(enemigo[1], enemigo[0]))
 
         for enem in enemigos1:
-            ene = platforms.Enemigo2(enem[0])
+            ene = Enemigo2(enem[0])
             ene.rect.x = enem[1]
             ene.rect.y = enem[2]
-            ene.change_x = enem[3]
+            ene.dx = enem[3]
             ene.boundary_left = enem[4]
             ene.boundary_right = enem[5]
             ene.level = self
-            self.enemy_list2.add(ene)
+            self.enemigos.add(ene)
 
         for enem in enemigos2:
-            ene = platforms.Enemigo1(enem[0])
+            ene = Enemigo1(enem[0])
             ene.rect.x = enem[1]
             ene.rect.y = enem[2]
             ene.change_x = enem[3]
             ene.boundary_left = enem[4]
             ene.boundary_right = enem[5]
             ene.level = self
-            self.enemy_list2.add(ene)
+            self.enemigos.add(ene)
 
-        # Go through the array above and add platforms
         for platform in level:
-            block = platforms.Platform(platform[0],4)
+            block = Plataforma(platform[0], 4)
             block.rect.x = platform[1]
             block.rect.y = platform[2]
             block.player = self.player
-            self.platform_list.add(block)
-
+            self.plataformas.add(block)
 
         for obj in objetos:
-            three_ob = platforms.Objeto(obj[0],4)
+            three_ob = Objeto(obj[0], 4)
             three_ob.rect.x = obj[1]
             three_ob.rect.y = obj[2]
-            self.object_list.add(three_ob)
+            self.objetos.add(three_ob)
 
-        # Add a custom moving platform
-        # Add a custom moving platform
-
-        movimiento = [
-
-
-                   ]
+        movimiento = []
 
         for mov in movimiento:
-            block = platforms.MovingPlatform(mov[0],3)
+            block = PlataformaEnMovimiento(mov[0], 3)
             block.rect.x = mov[1]
             block.rect.y = mov[2]
-            if(mov[3]=="X"):
+            if mov[3] == "X":
                 block.boundary_left = mov[4]
                 block.boundary_right = mov[5]
                 block.change_x = mov[6]
@@ -745,4 +559,4 @@ class Nivel3(Nivel):
                 block.change_y = mov[6]
             block.player = self.player
             block.level = self
-            self.platform_list.add(block)
+            self.plataformas.add(block)

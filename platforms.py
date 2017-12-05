@@ -3,6 +3,7 @@ import random
 
 from spritesheet_functions import SpriteSheet
 
+
 # NOMBRE = (x, y, alto, ancho)
 PASTO1 = (448, 193, 64, 64)
 PASTO2 = (384, 257, 128, 64)
@@ -28,6 +29,9 @@ PUERTA = (0, 405, 129, 172)
 HERRAMIENTAS = (320, 512, 189, 127)
 LAMPARA = (130, 383, 225, 183)
 
+_sonidos = {
+    "disparo_laser": pygame.mixer.Sound('audio/laser.wav')
+}
 
 class Shuriken(pygame.sprite.Sprite):
 
@@ -67,7 +71,7 @@ class Bala(pygame.sprite.Sprite):
         self.image = pygame.image.load('imagen/balas.png').convert_alpha()
         self.rect = self.image.get_rect()
         self.direccion = "L"
-        self.jugador = 0
+        self.jugador = False
 
     def update(self):
         if self.direccion == "R":
@@ -112,11 +116,16 @@ class Enemigo(pygame.sprite.Sprite):
         else:
             self.image = self.stay_frame[1]
 
+class Jefe(Enemigo):
+    pass
 
 class EnemigoEstatico(Enemigo):
-    def __init__(self, pos):
+    def __init__(self, pos, type=""):
         pygame.sprite.Sprite.__init__(self)
-        image = pygame.image.load("imagen/enemigo2.png").convert_alpha()
+        if type == "skull":
+            image = pygame.image.load("imagen/skull.png").convert_alpha()
+        else:
+            image = pygame.image.load("imagen/enemigo2.png").convert_alpha()
         self.stay_frame = []
         self.stay_frame.append(image)
         self.stay_frame.append(pygame.transform.flip(image, True, False))
@@ -224,8 +233,8 @@ class Enemigo1(Enemigo):
 
         self.ene = 1
 
-        self.disparar = random.randrange(dispararNum)
-        self.atacar = random.randrange(dispararNum - 50)
+        self.disparar_n = random.randrange(dispararNum)
+        self.atacar_n = random.randrange(dispararNum - 50)
 
         self.dispararN = dispararNum
 
@@ -281,17 +290,20 @@ class Enemigo1(Enemigo):
 
         self.rect.x += self.change_x
 
-        self.disparar -= 1
-        if self.disparar < 0:
-            self.disparar = random.randrange(self.dispararN)
-        self.atacar -= 1
-        if self.atacar < 0:
-            self.atacar = random.randrange(self.dispararN - 50)
+        self.disparar_n -= 1
+        if self.disparar_n < 0:
+            self.disparar_n = random.randrange(self.dispararN)
+        self.atacar_n -= 1
+        if self.atacar_n < 0:
+            self.atacar_n = random.randrange(self.dispararN - 50)
 
     def chocar(self):
         self.vida -= 1
 
-    def Attack(self):
+    def disparar(self):
+        pass
+
+    def atacar(self):
         self.attack = True
         self.cont_attack = 1
 
@@ -299,22 +311,16 @@ class Enemigo1(Enemigo):
 class Enemigo2(Enemigo):
 
     def __init__(self, dispararNum):
-
-        self.change_x = 0
-
-        # This holds all the images for the animated walk left/right
-        # of our player
+        pygame.sprite.Sprite.__init__(self)
+        self.dx = 0
         self.walking_frames_l = []
         self.walking_frames_r = []
         self.attack_frames_l = []
         self.attack_frames_r = []
         self.direccion = "L"
-        level = None
-
-        pygame.sprite.Sprite.__init__(self)
+        self.nivel = None
 
         sprite_sheet = SpriteSheet("imagen/skeleton.png")
-        # Load all the right facing images into a list
         image = sprite_sheet.get_image(39, 6, 30, 64)
         self.walking_frames_l.append(image)
         self.attack_frames_l.append(image)
@@ -355,20 +361,20 @@ class Enemigo2(Enemigo):
 
         self.ene = 1
 
-        self.disparar = random.randrange(dispararNum)
-        self.atacar = random.randrange(dispararNum - 50)
+        self.disparar_n = random.randrange(dispararNum)
+        self.atacar_n = random.randrange(dispararNum - 50)
 
         self.dispararN = dispararNum
 
         self.vida = 1
 
     def update(self):
-        pos = self.rect.x + self.level.sumatoria_de_cambio
+        pos = self.rect.x + self.nivel.sumatoria_de_cambio
 
-        cur_pos = self.rect.x - self.level.sumatoria_de_cambio
+        cur_pos = self.rect.x - self.nivel.sumatoria_de_cambio
         if cur_pos < self.boundary_left or cur_pos > self.boundary_right:
-            self.change_x *= -1
-            if (self.change_x < 0):
+            self.dx *= -1
+            if (self.dx < 0):
                 self.direccion = "L"
                 self.direccion = 0
             else:
@@ -398,31 +404,34 @@ class Enemigo2(Enemigo):
 
         else:
             if self.direccion == "R":
-                if self.change_x == 0:
+                if self.dx == 0:
                     self.image = self.attack_frames_r[0]
                 else:
                     frame = (pos // 30) % len(self.walking_frames_r)
                     self.image = self.walking_frames_r[frame]
             else:
-                if self.change_x == 0:
+                if self.dx == 0:
                     self.image = self.attack_frames_l[0]
                 else:
                     frame = (pos // 30) % len(self.walking_frames_l)
                     self.image = self.walking_frames_l[frame]
 
-        self.rect.x += self.change_x
+        self.rect.x += self.dx
 
-        self.disparar -= 1
-        if self.disparar < 0:
-            self.disparar = random.randrange(self.dispararN)
-        self.atacar -= 1
-        if self.atacar < 0:
-            self.atacar = random.randrange(self.dispararN - 50)
+        self.disparar_n -= 1
+        if self.disparar_n < 0:
+            self.disparar_n = random.randrange(self.dispararN)
+        self.atacar_n -= 1
+        if self.atacar_n < 0:
+            self.atacar_n = random.randrange(self.dispararN - 50)
 
     def chocar(self):
         self.vida -= 1
 
-    def Attack(self):
+    def disparar(self):
+        pass
+
+    def atacar(self):
         self.attack = True
         self.cont_attack = 1
 

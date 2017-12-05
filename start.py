@@ -13,20 +13,13 @@
 
 import sys
 import time
-
 import pygame
-
 import constants as const
-import platforms
-
 from pygame.locals import *
-from levels import Nivel1, Nivel2, Nivel3
 from constants import Color
-from player import Player
-from menu import Menu
 
 pygame.init()
-pygame.mixer.init(44100, -16, 3, 2048)
+pygame.mixer.init(44100, -16, 2, 2048)
 pygame.font.init()
 pygame.display.set_caption("Turtle ninja")
 _pantalla = pygame.display.set_mode((const.ANCHO_PANTALLA, const.ALTO_PANTALLA))
@@ -44,6 +37,11 @@ _imagenes = {
     "historia4": pygame.image.load('imagen/historia4.jpg'),
 }
 
+from player import Player
+from menu import Menu
+from levels import Nivel1, Nivel2, Nivel3
+import platforms
+
 
 def cargar_imagenes():
     if not _imagenes:
@@ -60,7 +58,7 @@ def jugar():
 
     fin = False
     player = Player()
-    niveles = [Nivel1(player), Nivel2(player)]#, Nivel3(player)]
+    niveles = [Nivel1(player), Nivel2(player), Nivel3(player)]
     nivel_actual = niveles[0]
     player_group = pygame.sprite.Group()
     player.nivel_actual = nivel_actual
@@ -199,7 +197,7 @@ def jugar():
         if player.rect.y > const.ANCHO_PANTALLA:
             aux = nivel_actual.sumatoria_de_cambio * -1
             print(aux)
-            if nivel_actual.id == 2 and (player.rect.x + aux) > 300 and (player.rect.x + aux) < 600:
+            if nivel_actual.id == 2 and 300 < (player.rect.x + aux) < 600:
                 nivel_actual.id = 3
                 nivel_actual = niveles[nivel_actual.id]
                 player.nivel_actual = nivel_actual
@@ -211,9 +209,12 @@ def jugar():
         if player.perdio:
             _pantalla.blit(_imagenes["perdiste"], (0, 0))
             pygame.display.flip()
-            pygame.time.wait(4000)
-            fin = True
-
+            while not fin:
+                for event in pygame.event.get():
+                    if event.type == pygame.QUIT:
+                        sys.exit(0)
+                    if event.type == pygame.KEYDOWN:
+                        fin = True
 
         clock.tick(60)
         pygame.display.flip()
