@@ -110,8 +110,8 @@ class Nivel1(Nivel):
         self.id = 0
         self.fondo = pygame.image.load("imagen/nivel1.jpg").convert_alpha()
         self.fondo.set_colorkey(constants.Color.BLANCO)
-        self.limite = -100
-        #self.limite = -3300
+        #self.limite = -100
+        self.limite = -3300
 
         level = [
             [platforms.PASTO2, 200, 536],
@@ -267,8 +267,8 @@ class Nivel2(Nivel):
         self.id = 1
         self.fondo = pygame.image.load("imagen/night1.png").convert_alpha()
         self.fondo.set_colorkey(constants.Color.BLANCO)
-        limite = 100
-        #self.limite = -5670
+        #limite = 100
+        self.limite = -5670
 
         level = [
             [platforms.PASTO2, 200, 536],
