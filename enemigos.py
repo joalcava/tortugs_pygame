@@ -304,7 +304,7 @@ class EnemigoConMovimiento2(pygame.sprite.Sprite):
         self.limite_izq = limites[0]
         self.limite_der = limites[1]
         self.nivel = nivel
-        self.vida = 3
+        self.vida = 2
         self.image = self.frames_caminando[self.direccion + str(self.frame_actual_caminando)]
         self.rect = self.image.get_rect()
         self.rect.x = pos[0]

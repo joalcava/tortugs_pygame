@@ -315,8 +315,8 @@ class Nivel2(Nivel):
 
         # Enemigos en movimiento
         self.enemigos.add(EnemigoConMovimiento2(pos=(560, 434), limites=(550, 910), nivel=self))
-        #self.enemigos.add(EnemigoConMovimiento2(pos=(3200, 136), limites=(3110, 3240), nivel=self))
-        #self.enemigos.add(EnemigoConMovimiento2(pos=(5210, 336), limites=(5110, 5350), nivel=self))
+        self.enemigos.add(EnemigoConMovimiento2(pos=(3200, 136), limites=(3110, 3240), nivel=self))
+        self.enemigos.add(EnemigoConMovimiento2(pos=(5210, 336), limites=(5110, 5350), nivel=self))
 
         for plataforma in level:
             block = Plataforma(plataforma[0], self.id)
@@ -445,67 +445,29 @@ class Nivel3(Nivel):
             (plataformas.HERRAMIENTAS, 3300, 373),
         ]
 
-        enemigos = [
-            ("skull", (550, 445)),
-            ("skull", (800, 445)),
-            ("skull", (1000, 445)),
-            ("skull", (1100, 445)),
-            ("skull", (1500, 445)),
-            ("skull", (1800, 445)),
-            ("skull", (2000, 445)),
-            ("skull", (2200, 445)),
-            ("skull", (2500, 445)),
-            ("skull", (2800, 445)),
-        ]
+        self.enemigos.add(EnemigoObstaculo2((550, 445)))
+        self.enemigos.add(EnemigoObstaculo((1000, 445)))
+        self.enemigos.add(EnemigoObstaculo2((1500, 445)))
+        self.enemigos.add(EnemigoObstaculo((2000, 445)))
+        self.enemigos.add(EnemigoObstaculo2((2500, 445)))
+        self.enemigos.add(EnemigoObstaculo((2800, 445)))
 
-        enemigos1 = [
-            (200, 560, 434, -1, 550, 910),
-            (200, 1050, 434, -1, 1000, 1500),
-            (200, 1550, 434, -1, 1500, 1800),
-            (200, 1850, 434, -1, 1800, 2000),
-            (200, 2150, 434, -1, 2100, 2300),
-            (200, 2350, 434, -1, 2300, 2500),
-            (200, 2550, 434, -1, 2500, 2700),
-        ]
+        # (200, 560, 434, -1, 550, 910),
+        # (200, 1050, 434, -1, 1000, 1500),
+        # (200, 1550, 434, -1, 1500, 1800),
+        # (200, 1850, 434, -1, 1800, 2000),
+        # (200, 2150, 434, -1, 2100, 2300),
+        # (200, 2350, 434, -1, 2300, 2500),
+        # (200, 2550, 434, -1, 2500, 2700),
+        #
+        # (200, 660, 424, -1, 650, 910),
+        # (200, 1150, 424, -1, 1100, 1600),
+        # (200, 1650, 424, -1, 1600, 1900),
+        # (200, 1950, 424, -1, 1700, 2100),
+        # (200, 2250, 424, -1, 2200, 2400),
+        # (200, 2450, 424, -1, 2400, 2600),
+        # (200, 2650, 424, -1, 2600, 2800),
 
-        enemigos2 = [
-            (200, 660, 424, -1, 650, 910),
-            (200, 1150, 424, -1, 1100, 1600),
-            (200, 1650, 424, -1, 1600, 1900),
-            (200, 1950, 424, -1, 1700, 2100),
-            (200, 2250, 424, -1, 2200, 2400),
-            (200, 2450, 424, -1, 2400, 2600),
-            (200, 2650, 424, -1, 2600, 2800),
-        ]
-
-        # ene = Enemigo("boss.png", 150)
-        # ene.rect.x = 3400
-        # ene.rect.y = 414
-        # ene.ene = 5
-        # self.enemigos.add(ene)
-
-        for enemigo in enemigos:
-            self.enemigos.add(EnemigoObstaculo2(enemigo[1]))
-
-        # for enem in enemigos1:
-        #     ene = EnemigoConMovimiento2(enem[0])
-        #     ene.rect.x = enem[1]
-        #     ene.rect.y = enem[2]
-        #     ene.dx = enem[3]
-        #     ene.boundary_left = enem[4]
-        #     ene.boundary_right = enem[5]
-        #     ene.nivel = self
-        #     self.enemigos.add(ene)
-
-        # for enem in enemigos2:
-        #     ene = EnemigoConMovimiento(enem[0])
-        #     ene.rect.x = enem[1]
-        #     ene.rect.y = enem[2]
-        #     ene.change_x = enem[3]
-        #     ene.boundary_left = enem[4]
-        #     ene.boundary_right = enem[5]
-        #     ene.nivel = self
-        #     self.enemigos.add(ene)
 
         for platform in level:
             block = Plataforma(platform[0], self.id)
