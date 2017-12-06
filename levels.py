@@ -11,6 +11,8 @@ from plataformas import PlataformaEnMovimiento, Plataforma, Objeto
 
 
 class Nivel:
+    sonido_herido = pygame.mixer.Sound('audio/hurt.wav')
+    agh = pygame.mixer.Sound('audio/agh.wav')
     plataformas = None
     enemigos = None
     objetos = None
@@ -54,12 +56,15 @@ class Nivel:
         # Balas de jugador chocan con enemigo
         balas_player = pygame.sprite.Group([i for i in self.balas if i.jugador is True])
         impactos = pygame.sprite.groupcollide(balas_player, self.enemigos, True, True)
+        if impactos:
+            Nivel.agh.play()
         self.player.puntos += len(impactos) * 5
 
         # Balas chocan con jugador
         balas_enemigos = pygame.sprite.Group([i for i in self.balas if i.jugador is False])
         impactos = pygame.sprite.spritecollide(self.player, balas_enemigos, True)
         if impactos:
+            Nivel.sonido_herido.play()
             if self.player.atacando is False:
                 self.player.vida -= 1
             else:
@@ -68,6 +73,8 @@ class Nivel:
         # Jugador choca con enemigos
         impactos = pygame.sprite.spritecollide(self.player, self.enemigos, self.player.atacando)
         if impactos:
+            if not pygame.mixer.get_busy():
+                Nivel.sonido_herido.play()
             if self.player.atacando:
                 self.player.puntos += len(impactos) * 10
             else:

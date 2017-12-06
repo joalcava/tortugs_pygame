@@ -120,6 +120,7 @@ class Bala(pygame.sprite.Sprite):
 
 # Estacionario que dispara balas
 class EnemigoEstacionario(pygame.sprite.Sprite):
+    sonido_laser = pygame.mixer.Sound('audio/laser.wav')
     def __init__(self, pos):
         self.con_movimiento = False
         pygame.sprite.Sprite.__init__(self)
@@ -141,6 +142,7 @@ class EnemigoEstacionario(pygame.sprite.Sprite):
     def disparar(self):
         self.temporizador += 1
         if (self.temporizador % self.cadencia) == 0:
+            EnemigoEstacionario.sonido_laser.play()
             self.cadencia = random.randrange(40, 100)
             self.temporizador = 0
             bala = Bala()

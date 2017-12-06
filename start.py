@@ -34,7 +34,7 @@ _imagenes = {
     "shuriken_small": pygame.image.load("imagen/shuriken_small.png").convert_alpha(),
     "perdiste": pygame.image.load("imagen/perdiste.png").convert_alpha(),
     "instrucciones": pygame.image.load('imagen/instrucciones.jpg'),
-    "creditos": pygame.image.load('imagen/instrucciones.jpg'),
+    "creditos": pygame.image.load('imagen/creditos.jpg'),
     "historia1": pygame.image.load('imagen/historia1.jpg'),
     "historia2": pygame.image.load('imagen/historia2.jpg'),
     "historia3": pygame.image.load('imagen/historia3.jpg'),
@@ -53,6 +53,7 @@ def cargar_imagenes():
 
 def jugar():
     _pantalla.blit(_imagenes["cargando"], (0, 0))
+    sonido_shuriken = pygame.mixer.Sound('audio/throw2.wav')
     pygame.display.flip()
 
     fin = False
@@ -92,6 +93,7 @@ def jugar():
                 # Lanzar shuriken
                 if event.key == pygame.K_SPACE:
                     if player.shurikens > 0:
+                        sonido_shuriken.play()
                         shuriken = enemigos.Shuriken(player.direccion, True)
                         if player.direccion == "R":
                             shuriken.rect.x = player.rect.x + 30
