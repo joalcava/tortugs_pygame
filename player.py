@@ -1,11 +1,10 @@
 import pygame
 import constants
 
-from platforms import PlataformaEnMovimiento
+from plataformas import PlataformaEnMovimiento
 
 
 class Player(pygame.sprite.Sprite):
-    """El jugador"""
 
     dx = 0
     dy = 0
@@ -225,4 +224,4 @@ class Player(pygame.sprite.Sprite):
                     self.rect.top = block.rect.bottom
             self.dy = 0  # Detener el movimiento vertical
             if isinstance(block, PlataformaEnMovimiento):  # Si colisiono con una plataforma en movimiento
-                self.rect.x += block.change_x  # mover al jugador con la plataforma
+                self.rect.x += block.dx  # mover al jugador con la plataforma

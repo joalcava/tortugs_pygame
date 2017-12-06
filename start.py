@@ -14,9 +14,13 @@
 import sys
 import time
 import pygame
+import enemigos
 import constants as const
 from pygame.locals import *
 from constants import Color
+from player import Player
+from menu import Menu
+from levels import Nivel1, Nivel2, Nivel3
 
 pygame.init()
 pygame.mixer.init(44100, -16, 2, 2048)
@@ -36,11 +40,6 @@ _imagenes = {
     "historia3": pygame.image.load('imagen/historia3.jpg'),
     "historia4": pygame.image.load('imagen/historia4.jpg'),
 }
-
-from player import Player
-from menu import Menu
-from levels import Nivel1, Nivel2, Nivel3
-import platforms
 
 
 def cargar_imagenes():
@@ -93,7 +92,7 @@ def jugar():
                 # Lanzar shuriken
                 if event.key == pygame.K_SPACE:
                     if player.shurikens > 0:
-                        shuriken = platforms.Shuriken(player.direccion, True)
+                        shuriken = enemigos.Shuriken(player.direccion, True)
                         if player.direccion == "R":
                             shuriken.rect.x = player.rect.x + 30
                             shuriken.rect.y = player.rect.y + 5
@@ -111,14 +110,14 @@ def jugar():
                     _pantalla.blit(texto, (40, const.ALTO_PANTALLA / 2 - 100))
                     pygame.display.flip()
                     while not pausa_terminada:
-                        for event in pygame.event.get():
-                            if event.type == pygame.QUIT:
+                        for _event in pygame.event.get():
+                            if _event.type == pygame.QUIT:
                                 pausa_terminada = True
                                 fin = True
-                            if event.type == pygame.KEYDOWN:
-                                if event.key == pygame.K_ESCAPE:
+                            if _event.type == pygame.KEYDOWN:
+                                if _event.key == pygame.K_ESCAPE:
                                     pausa_terminada = True
-                                if event.key == pygame.K_ESCAPE:
+                                if _event.key == pygame.K_ESCAPE:
                                     pausa_terminada = True
 
             if event.type == pygame.KEYUP:
@@ -157,14 +156,14 @@ def jugar():
                 player.nivel_actual = nivel_actual
                 player.rect.x = 250
                 player.vida += 2
-                player.shurikens += 10
+                player.shurikens += 5
                 fuente = pygame.font.Font('fuentes/ninja-turtles-regular.otf', 80)
                 texto = fuente.render("GANASTE!", True, Color.VERDE)
                 _pantalla.blit(texto, (40, const.ALTO_PANTALLA / 2 - 100))
                 pygame.display.flip()
-                time.sleep(4)
+                time.sleep(2)
         if nivel_actual.id == 2 and len(nivel_actual.enemigos) == 0:
-            fuente = pygame.font.Font('fuentes/ninja-turtles-regular.otf', 80)
+            fuente = pygame.font.Font('fuentes/ninja-turtles-regular.otf', 50)
             texto = fuente.render("BOO YAH, GANASTE!", True, Color.VERDE)
             _pantalla.blit(texto, (40, const.ALTO_PANTALLA / 2 - 100))
             pygame.display.flip()
@@ -195,16 +194,8 @@ def jugar():
 
         # Cayendo fuera de la plataforma
         if player.rect.y > const.ANCHO_PANTALLA:
-            aux = nivel_actual.sumatoria_de_cambio * -1
-            print(aux)
-            if nivel_actual.id == 2 and 300 < (player.rect.x + aux) < 600:
-                nivel_actual.id = 3
-                nivel_actual = niveles[nivel_actual.id]
-                player.nivel_actual = nivel_actual
-                player.rect.x = 250
-                player.rect.y = 100
-            else:
-                player.perdio = True
+            player.perdio = True
+            print("Cayendo fuera de la pantalla")
 
         if player.perdio:
             _pantalla.blit(_imagenes["perdiste"], (0, 0))
@@ -218,8 +209,6 @@ def jugar():
 
         clock.tick(60)
         pygame.display.flip()
-
-    return nivel_actual.id, player.perdio
 
 
 def instrucciones():
