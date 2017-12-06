@@ -325,9 +325,9 @@ class EnemigoConMovimiento2(pygame.sprite.Sprite):
         # Atacar
         if self.atacando:
             if self.direccion == "R":
-                self.dx = 3
+                self.dx = 2
             else:
-                self.dx = -3
+                self.dx = -2
 
             self.temporizador_atacando += 1
             if (self.temporizador_atacando % 40) == 0:

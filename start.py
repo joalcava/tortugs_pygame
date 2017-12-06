@@ -54,6 +54,7 @@ def cargar_imagenes():
 def jugar():
     _pantalla.blit(_imagenes["cargando"], (0, 0))
     sonido_shuriken = pygame.mixer.Sound('audio/throw2.wav')
+    sonido_risas = pygame.mixer.Sound('audio/laugh.wav')
     pygame.display.flip()
 
     fin = False
@@ -200,6 +201,7 @@ def jugar():
             print("Cayendo fuera de la pantalla")
 
         if player.perdio:
+            sonido_risas.play()
             _pantalla.blit(_imagenes["perdiste"], (0, 0))
             pygame.display.flip()
             while not fin:
