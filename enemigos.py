@@ -265,7 +265,7 @@ class EnemigoConMovimiento(pygame.sprite.Sprite):
 
         if self.rect.y > 800:
             pygame.sprite.Sprite.kill(self)
-            print('muerto')
+            print('Enemigo cayendo al vacio')
 
     def kill(self):
         self.vida -= 1

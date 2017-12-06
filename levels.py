@@ -261,7 +261,7 @@ class Nivel2(Nivel):
         self.id = 1
         self.fondo = pygame.image.load("imagen/night1.png").convert_alpha()
         self.fondo.set_colorkey(constants.Color.BLANCO)
-        # self.limite = -100
+        self.limite = -1
         self.limite = -5670
 
         level = [
@@ -445,29 +445,26 @@ class Nivel3(Nivel):
             (plataformas.HERRAMIENTAS, 3300, 373),
         ]
 
-        self.enemigos.add(EnemigoObstaculo2((550, 445)))
-        self.enemigos.add(EnemigoObstaculo((1000, 445)))
-        self.enemigos.add(EnemigoObstaculo2((1500, 445)))
-        self.enemigos.add(EnemigoObstaculo((2000, 445)))
-        self.enemigos.add(EnemigoObstaculo2((2500, 445)))
-        self.enemigos.add(EnemigoObstaculo((2800, 445)))
+        self.enemigos.add(EnemigoObstaculo2((550, 450)))
+        self.enemigos.add(EnemigoObstaculo((1000, 455)))
+        self.enemigos.add(EnemigoObstaculo2((1400, 450)))
+        self.enemigos.add(EnemigoObstaculo((2000, 455)))
+        self.enemigos.add(EnemigoObstaculo2((2500, 450)))
+        self.enemigos.add(EnemigoObstaculo((2800, 455)))
 
-        # (200, 560, 434, -1, 550, 910),
-        # (200, 1050, 434, -1, 1000, 1500),
-        # (200, 1550, 434, -1, 1500, 1800),
-        # (200, 1850, 434, -1, 1800, 2000),
-        # (200, 2150, 434, -1, 2100, 2300),
-        # (200, 2350, 434, -1, 2300, 2500),
-        # (200, 2550, 434, -1, 2500, 2700),
-        #
-        # (200, 660, 424, -1, 650, 910),
-        # (200, 1150, 424, -1, 1100, 1600),
-        # (200, 1650, 424, -1, 1600, 1900),
-        # (200, 1950, 424, -1, 1700, 2100),
-        # (200, 2250, 424, -1, 2200, 2400),
-        # (200, 2450, 424, -1, 2400, 2600),
-        # (200, 2650, 424, -1, 2600, 2800),
+        self.enemigos.add(EnemigoEstacionario2((650, 434)))
+        self.enemigos.add(EnemigoEstacionario((1350, 445)))
+        self.enemigos.add(EnemigoEstacionario2((1550, 434)))
+        self.enemigos.add(EnemigoEstacionario((1850, 445)))
+        self.enemigos.add(EnemigoEstacionario2((2150, 434)))
+        self.enemigos.add(EnemigoEstacionario((2350, 445)))
 
+        self.enemigos.add(EnemigoConMovimiento((850, 430), nivel=self))
+        self.enemigos.add(EnemigoConMovimiento2((1150, 424), (1100, 1600), nivel=self))
+        self.enemigos.add(EnemigoConMovimiento((1650, 430), nivel=self))
+        self.enemigos.add(EnemigoConMovimiento2((2250, 424), (2200, 2400), nivel=self))
+        self.enemigos.add(EnemigoConMovimiento((2450, 430), nivel=self))
+        self.enemigos.add(EnemigoConMovimiento2((2650, 430), (2600, 2800), nivel=self))
 
         for platform in level:
             block = Plataforma(platform[0], self.id)
